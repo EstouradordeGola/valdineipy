@@ -1,11 +1,17 @@
 import sys
 import pandas as pd
+import openpyxl
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QGridLayout, QMessageBox
 from PyQt5.QtCore import Qt
 import smtplib
+
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+'''
+aqui da pra por o que tu quiser memo
 
+sys: Usdo para manipular o sistema, como encerrar a aplicação.
+pandas: Biblioteca para manipulação, usada aqui para criar um DataFrame e salvar'''
 class CadastroAlunos(QWidget):
     def __init__(self):
             super().__init__()
@@ -62,10 +68,10 @@ class CadastroAlunos(QWidget):
     def cadastrar_e_enviar_emails(self):
           if self.alunos:
                 df = pd.DataFrame(self.alunos)
-                df.to_excel("cadastro_alunos.x1sx", index=False)
+                df.to_excel("cadastro_alunos.xlsx", index=False)
 
                 for aluno in self.alunos:
-                      self.enviar_emails(aluno['Email'])
+                      self.enviar_email(aluno['Email'])
                 
                 QMessageBox.information(self, 'Sucesso', 'Cadastro completo e emails enviados!')
           else:
@@ -82,7 +88,7 @@ class CadastroAlunos(QWidget):
 
           servidor = smtplib.SMTP('smtp.gmail.com', 587)
           servidor.starttls()
-          servidor.login(self.remtente, self.senha)
+          servidor.login(self.remetente, self.senha)
           texto = msg.as_string()
           servidor.sendmail(self.remetente, destinatario, texto)
           servidor.quit()
@@ -91,4 +97,4 @@ if __name__ == '__main__':
       app = QApplication(sys.argv)
       ex = CadastroAlunos()
       ex.show()
-      sys.exit(app.exec_())
+      sys.exit(app.exec())
